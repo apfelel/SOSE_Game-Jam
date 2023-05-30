@@ -10,6 +10,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoSingleton<UIManager>
 {
+    public static event Action OnUnPause;
+
     [SerializeField]
     private GameObject HUD;
     [SerializeField]
@@ -39,20 +41,17 @@ public class UIManager : MonoSingleton<UIManager>
     public bool IsPaused;
     [HideInInspector]
     public bool InSetting;
+
     private void Start()
     {
         if (GameManager.Instance.InGame)
         {
             curPickupsCount.text = "0";
-            maxPickups.text = GameObject.FindGameObjectsWithTag("Collectible").Count().ToString();
+            maxPickups.text = GameObject.FindGameObjectsWithTag("Collectable").Count().ToString();
 
             _pauseMenue.SetActive(false);
             _settingMenue.SetActive(false);
             interactionImage.enabled = false;
-        }
-        else
-        {
-            HUD.SetActive(false);
         }
     }
     public void Pause()
@@ -60,10 +59,11 @@ public class UIManager : MonoSingleton<UIManager>
         IsPaused = true;
         _settingMenue.SetActive(false);
         _pauseMenue.SetActive(true);
-        _pauseMenue.GetComponentInChildren<Selectable>().Select();
+        _pauseMenue.GetComponentInChildren<Selectable>()?.Select();
         Time.timeScale = 0.0f;
-        //TODO: bad code
-        OpenSettings();
+        if (!GameManager.Instance.InGame) return;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void UnPause()
@@ -73,6 +73,10 @@ public class UIManager : MonoSingleton<UIManager>
         _pauseMenue.SetActive(false);
         _settingMenue.SetActive(false);
         Time.timeScale = 1f;
+        if (!GameManager.Instance.InGame) return;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        OnUnPause?.Invoke();
     }
 
     public void SwitchPause()
@@ -89,6 +93,8 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void OpenSettings()
     {
+        if(_pauseMenue != null)
+            _pauseMenue.SetActive(false);
         _settingMenue.SetActive(true);
         _settingMenue.GetComponentInChildren<Selectable>().Select();
 
@@ -103,7 +109,8 @@ public class UIManager : MonoSingleton<UIManager>
     public void CloseSettings()
     {        
         _settingMenue.SetActive(false);
-        _pauseMenue.SetActive(true);
+        if(_pauseMenue != null)
+            _pauseMenue.SetActive(true);
         _pauseMenue.GetComponentInChildren<Selectable>().Select();
         PlayerPrefs.Save();
         InSetting = false;

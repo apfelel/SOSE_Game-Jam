@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class LevitatingObject : MonoBehaviour
 {
     [SerializeField] GameObject targetPickup;
@@ -29,11 +28,12 @@ public class LevitatingObject : MonoBehaviour
             return;
         }
         timer += Time.deltaTime;
-
+        
         targetPickup.transform.position = 
             Vector3.Lerp(
-                targets[Mathf.FloorToInt(timer) % targets.Count].transform.position,
+                targets[(Mathf.FloorToInt(timer)) % targets.Count].transform.position,
                 targets[(Mathf.FloorToInt(timer) + 1) % targets.Count].transform.position,
                 timer % 1f);
+
     }
 }

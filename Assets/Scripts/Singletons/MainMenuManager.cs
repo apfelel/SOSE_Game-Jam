@@ -9,4 +9,9 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ShowTasks()
+    {
+
+    }
 }

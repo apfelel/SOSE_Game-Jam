@@ -20,6 +20,8 @@ public class PlayerPickup : MonoBehaviour
 
     public void Interact()
     {
+        if (!InRange) return;
+
         Destroy(collectible);
         GameManager.Instance.PickupCount++;
         UIManager.Instance.ChangeInteract(false);
@@ -28,7 +30,7 @@ public class PlayerPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Collectible"))
+        if (other.CompareTag("Collectable"))
         {
             collectible = other.gameObject;
             InRange = true;
@@ -37,7 +39,7 @@ public class PlayerPickup : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Collectible"))
+        if (other.CompareTag("Collectable"))
         {
             collectible = null;
             InRange = false;
