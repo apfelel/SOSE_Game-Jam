@@ -8660,6 +8660,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1264728779596416511, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264728779596416511, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264728779596416511, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366863255715302150, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1366863255715302150, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.19
+      objectReference: {fileID: 0}
     - target: {fileID: 1963343762419059333, guid: cc45b00301b96ea46a511363af610abf,
         type: 3}
       propertyPath: m_RootOrder
@@ -8715,6 +8740,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2700816058953570427, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 2700816058953570427, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4699433669253946269, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 4699433669253946269, guid: cc45b00301b96ea46a511363af610abf,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.18
+      objectReference: {fileID: 0}
     - target: {fileID: 4860389032016780699, guid: cc45b00301b96ea46a511363af610abf,
         type: 3}
       propertyPath: smoothness
@@ -8726,7 +8771,8 @@ PrefabInstance:
       value: LevitatingPickup
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5328688212882504404, guid: cc45b00301b96ea46a511363af610abf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc45b00301b96ea46a511363af610abf, type: 3}
