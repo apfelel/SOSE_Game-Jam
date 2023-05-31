@@ -6,9 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public float Timer;
+
     public static event Action LVLFinished;
     public static event Action LVLStart;
 
+
+    private bool firstTime = true;
     private int pickupCount = 0;
     private int maxPickups = 0;
     public int PickupCount
@@ -28,8 +32,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     public bool InGame;
 
+    private void Update()
+    {
+        if (InGame)
+            Timer += Time.deltaTime;
+    }
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
         SceneManager.activeSceneChanged += OnSceneChanged;
         RefreshState();
     }
@@ -44,6 +54,8 @@ public class GameManager : MonoSingleton<GameManager>
         if (InGame)
         {
             maxPickups = GameObject.FindGameObjectsWithTag("Collectable").Length;
+            Timer = 0;
+            Time.timeScale = 0;
             UnlockCursor();
         }
         else
@@ -58,9 +70,17 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void StartLVL()
     {
-        LockCursor();
-        LVLStart?.Invoke();
-        Time.timeScale = 1;
+        if (firstTime)
+        {
+            UIManager.Instance.ShowTutorial();
+            firstTime = false;
+        }
+        else
+        {
+            LockCursor();
+            LVLStart?.Invoke();
+            Time.timeScale = 1;
+        }
     }
     public void ReturnToMenu()
     {
@@ -73,6 +93,7 @@ public class GameManager : MonoSingleton<GameManager>
         Time.timeScale = 0;
         LVLFinished?.Invoke();
         EndScreenManager.Instance.ShowEndscreen();
+        InGame = false;
     }
 
     public void LockCursor()

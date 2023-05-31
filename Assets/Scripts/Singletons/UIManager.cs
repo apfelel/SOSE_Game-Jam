@@ -11,13 +11,18 @@ using UnityEngine.UI;
 public class UIManager : MonoSingleton<UIManager>
 {
     public static event Action OnUnPause;
+    public static event Action<float> OnSettingsClosed;
 
+    [SerializeField] 
+    private GameObject tutorial, startScreen;
     [SerializeField]
     private GameObject HUD;
     [SerializeField]
     private TextMeshProUGUI curPickupsCount;
     [SerializeField]
     private TextMeshProUGUI maxPickups;
+    [SerializeField]
+    private TextMeshProUGUI timer;
     [SerializeField]
     private Image interactionImage;
     [Space]
@@ -29,6 +34,8 @@ public class UIManager : MonoSingleton<UIManager>
     private Slider _masterSlider;
     [SerializeField]
     private Slider _ambientSlider;
+    [SerializeField]
+    private Slider _sensitivitySlider;
 
     [Space]
     [SerializeField]
@@ -44,15 +51,31 @@ public class UIManager : MonoSingleton<UIManager>
 
     private void Start()
     {
+        var sensitivity = PlayerPrefs.GetFloat("Sensitivity", -1);
+        if (sensitivity == -1)
+        {
+            sensitivity = 1;
+            PlayerPrefs.SetFloat("Sensitivity", 1);
+        }
+
         if (GameManager.Instance.InGame)
         {
+            HUD.SetActive(true);
+            startScreen.SetActive(true);
+            tutorial.SetActive(false);
             curPickupsCount.text = "0";
             maxPickups.text = GameObject.FindGameObjectsWithTag("Collectable").Count().ToString();
-
-            _pauseMenue.SetActive(false);
-            _settingMenue.SetActive(false);
-            interactionImage.enabled = false;
         }
+        else
+            HUD.SetActive(false);
+        _pauseMenue.SetActive(false);
+        _settingMenue.SetActive(false);
+        interactionImage.enabled = false;
+    }
+    private void Update()
+    {
+        if(GameManager.Instance.InGame && timer)
+            timer.text = GameManager.Instance.Timer.ToString("n2");
     }
     public void Pause()
     {
@@ -77,6 +100,8 @@ public class UIManager : MonoSingleton<UIManager>
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         OnUnPause?.Invoke();
+        PlayerPrefs.Save();
+        OnSettingsClosed?.Invoke(PlayerPrefs.GetFloat("Sensitivity"));
     }
 
     public void SwitchPause()
@@ -102,18 +127,26 @@ public class UIManager : MonoSingleton<UIManager>
         _sfxSlider.value = PlayerPrefs.GetFloat("SfxVolume");
         _masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
         _ambientSlider.value = PlayerPrefs.GetFloat("AmbientVolume");
-
+        _sensitivitySlider.value = PlayerPrefs.GetFloat("Sensitivity");
         InSetting = true;
     }
 
     public void CloseSettings()
-    {        
-        _settingMenue.SetActive(false);
-        if(_pauseMenue != null)
+    {
+        if (GameManager.Instance.InGame)
+        {
+            _settingMenue.SetActive(false);
             _pauseMenue.SetActive(true);
+        }
+        else
+        {
+            _settingMenue.SetActive(false);
+            _pauseMenue.SetActive(false);
+        }
         _pauseMenue.GetComponentInChildren<Selectable>().Select();
-        PlayerPrefs.Save();
         InSetting = false;
+        PlayerPrefs.Save();
+        OnSettingsClosed?.Invoke(PlayerPrefs.GetFloat("Sensitivity"));
     }
     public void ChangeMusicVolume(float value)
     {
@@ -135,7 +168,10 @@ public class UIManager : MonoSingleton<UIManager>
         SoundManager.Instance.ChangeVolume(SoundManager.AudioNames.Ambient, value);
         PlayerPrefs.SetFloat("AmbientVolume", value);
     }
-
+    public void ChangeSensitivity(float value)
+    {
+        PlayerPrefs.SetFloat("Sensitivity", value);
+    }
     public void QuitGame()
     {
         Application.Quit();
@@ -162,5 +198,19 @@ public class UIManager : MonoSingleton<UIManager>
     public void FadeOut()
     {
 
+    }
+
+    public void ShowTutorial()
+    {
+        tutorial.gameObject.SetActive(true);
+    }
+
+    public void StartLVL()
+    {
+        GameManager.Instance.StartLVL();
+    }
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

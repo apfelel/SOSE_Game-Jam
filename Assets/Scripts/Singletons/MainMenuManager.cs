@@ -20,4 +20,9 @@ public class MainMenuManager : MonoBehaviour
     {
         taskMenu.SetActive(false);
     }
+
+    public void StartGame(string scene)
+    {
+        GameManager.Instance.StartGame(scene);
+    }
 }
