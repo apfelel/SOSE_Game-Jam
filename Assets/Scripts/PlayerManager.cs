@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private LayerMask moveAllignLayer;
     [SerializeField] private GameObject vCam;
     [SerializeField] private GameObject targetVerticalRotation;
     [SerializeField] private float speed;
     [SerializeField] private GameObject visualRoot;
 
     [SerializeField] private CinemachineFreeLook freelookCam;
-
+    [SerializeField] private float maxHeight;
     PlayerInput input;
     InputAction moveAction;
     InputAction verticalMoveAction;
@@ -104,7 +105,7 @@ public class PlayerManager : MonoBehaviour
         playerPickup.Interact();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (UIManager.Instance.IsPaused) return;
         Move(moveAction.ReadValue<Vector2>());
@@ -127,7 +128,27 @@ public class PlayerManager : MonoBehaviour
         }
 
 
-        targetSpeed = newTargetSpeed;
+        targetSpeed = newTargetSpeed * Mathf.Clamp(Vector3.Dot(visualRoot.transform.forward, newTargetSpeed.normalized) + 0.4f, 0.1f, 1f);
+        RaycastHit hit;
+        var targetMag = targetSpeed.magnitude;
+        var rayDistance = targetMag * 0.5f;
+
+        if(Physics.Raycast(transform.position, targetSpeed.normalized, out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.right * 0.2f), targetSpeed.normalized + (visualRoot.transform.right * 0.2f), out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.right * -0.2f), targetSpeed.normalized + (visualRoot.transform.right * -0.2f), out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.up * 0.2f), targetSpeed.normalized + (visualRoot.transform.up * -0.2f), out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.up * -0.2f), targetSpeed.normalized + (visualRoot.transform.up * -0.2f), out hit, rayDistance, moveAllignLayer))
+        {
+            var projected = Vector3.ProjectOnPlane(targetSpeed, hit.normal);
+            targetSpeed = (targetSpeed.normalized + projected.normalized * 0.5f).normalized * targetMag;
+        }
+
+        if(transform.position.y > maxHeight && targetSpeed.y > 0)
+        {
+            var forward = targetSpeed;
+            forward.y = 0;
+            targetSpeed = (targetSpeed.normalized + (forward.normalized * (transform.position.y - maxHeight))).normalized * targetMag;
+        }
 
         rb.velocity = Vector3.Lerp(rb.velocity, targetSpeed, Time.deltaTime * 10);
 
@@ -135,12 +156,14 @@ public class PlayerManager : MonoBehaviour
     }
     private void AllignVisualRoot()
     {
-        Vector3 targetForward = (rb.velocity + new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z)).normalized;
+        Vector3 targetForward = rb.velocity;
+
+        if (Mathf.Abs(Vector3.Angle(targetForward, visualRoot.transform.forward)) < 5) return;
 
         float dot = Vector3.Dot(targetForward, visualRoot.transform.forward);
         if (dot < 0.5f)
         {
-            targetForward = (Quaternion.Euler(0, 45 * (dot - 0.5f), 0) * targetForward).normalized;
+            targetForward = targetForward + (visualRoot.transform.right * 0.1f);
         }
 
         visualRoot.transform.forward = Vector3.Slerp(
@@ -156,6 +179,8 @@ public class PlayerManager : MonoBehaviour
         //visualRoot.transform.localRotation = Quaternion.Euler(targetForward.x, 0, 0);
 
     }
-
-
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(transform.position + targetSpeed, 0.5f);
+    }
 }

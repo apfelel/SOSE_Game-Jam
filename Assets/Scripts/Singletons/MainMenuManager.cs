@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] private GameObject taskMenu;
     public void QuitGame()
     {
         Application.Quit();
@@ -12,6 +13,11 @@ public class MainMenuManager : MonoBehaviour
 
     public void ShowTasks()
     {
+        taskMenu.SetActive(true);
+    }
 
+    public void CloseTasks()
+    {
+        taskMenu.SetActive(false);
     }
 }

@@ -101,7 +101,7 @@ public class UIManager : MonoSingleton<UIManager>
         _musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
         _sfxSlider.value = PlayerPrefs.GetFloat("SfxVolume");
         _masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
-        //_ambientSlider.value = PlayerPrefs.GetFloat("AmbientVolume");
+        _ambientSlider.value = PlayerPrefs.GetFloat("AmbientVolume");
 
         InSetting = true;
     }
@@ -152,5 +152,15 @@ public class UIManager : MonoSingleton<UIManager>
     public void RefreshPickup()
     {
         curPickupsCount.text = GameManager.Instance.PickupCount.ToString();
+    }
+
+    public void FadeIn()
+    {
+
+    }
+
+    public void FadeOut()
+    {
+
     }
 }

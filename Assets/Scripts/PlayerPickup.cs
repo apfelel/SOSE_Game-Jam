@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerPickup : MonoBehaviour
 {
     [HideInInspector] public bool InRange;
-    private GameObject collectible;
+    private IInteractable collectible;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,25 +21,23 @@ public class PlayerPickup : MonoBehaviour
     public void Interact()
     {
         if (!InRange) return;
-
-        Destroy(collectible);
-        GameManager.Instance.PickupCount++;
-        UIManager.Instance.ChangeInteract(false);
+        collectible.Interact();
+        collectible = null;
         InRange = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Collectable"))
+        if (other.TryGetComponent(out IInteractable col))
         {
-            collectible = other.gameObject;
+            collectible = col;
             InRange = true;
             UIManager.Instance.ChangeInteract(true);
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Collectable"))
+        if (other.TryGetComponent(out IInteractable _))
         {
             collectible = null;
             InRange = false;
