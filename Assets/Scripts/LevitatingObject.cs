@@ -2,18 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.VFX;
+
 public class LevitatingObject : MonoBehaviour
 {
     [SerializeField] GameObject targetPickup;
     [SerializeField] GameObject targetParent;
     private List<GameObject> targets = new();
     private List<GameObject> childs = new();
-    [SerializeField] private float duration;
     private float timer;
     [SerializeField] float smoothness;
+
+    bool floating = true;
+
+    Vector3 startPos;
     // Start is called before the first frame update
     void Start()
     {
+        startPos = targetPickup.transform.position;
         foreach(Transform child in targetParent.transform)
         {
             childs.Add(child.gameObject);
@@ -59,6 +65,17 @@ public class LevitatingObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!floating)
+        {
+            targetPickup.transform.position += (startPos - targetPickup.transform.position).normalized * Time.deltaTime;
+            Debug.Log((startPos - transform.position).normalized * Time.deltaTime);
+            if (Vector3.Distance(startPos, transform.position) > (startPos - (transform.position).normalized * Time.deltaTime).magnitude)
+            {
+                targetPickup.transform.position = startPos;
+                enabled = false;
+            }
+            return;
+        }
         if (!targetPickup)
         {
             Destroy(gameObject);
@@ -79,5 +96,11 @@ public class LevitatingObject : MonoBehaviour
         {
             Gizmos.DrawSphere(target.transform.position, 0.5f);
         }
+    }
+
+    public void ResetPosition()
+    {
+        floating = false;
+        GetComponentInChildren<VisualEffect>().SetInt("Particle", 0);
     }
 }

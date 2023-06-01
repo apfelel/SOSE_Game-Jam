@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private AudioSource windAudioSource;
-
+    private PlayerAnimController animController;
     [SerializeField] private GameObject targetCam;
     [SerializeField] private ParticleSystem particle;
     [SerializeField] private LayerMask moveAllignLayer;
@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private CinemachineFreeLook freelookCam;
     [SerializeField] private float maxHeight;
     [SerializeField] private float sprintSpeed = 2;
+    [SerializeField] private float maxStamina, staminaRegen, staminaRegenDelay;
+    private float curStamina, staminaRegenDelayTimer;
     private float sprintMod = 1.5f;
     PlayerInput input;
     InputAction moveAction;
@@ -33,6 +35,8 @@ public class PlayerManager : MonoBehaviour
     
     void Awake()
     {
+        animController = GetComponent<PlayerAnimController>();
+        curStamina = maxStamina;
         vCam.SetActive(false);
         GameManager.LVLFinished += LVLFinished;
         GameManager.LVLStart += UnlockInput;
@@ -133,13 +137,34 @@ public class PlayerManager : MonoBehaviour
         if (UIManager.Instance.IsPaused) return;
         Move(moveAction.ReadValue<Vector2>());
         AllignVisualRoot();
-        windAudioSource.volume = (rb.velocity.magnitude / 30) - 0.2f;
+        windAudioSource.volume = (rb.velocity.magnitude / (2 * speed)) - 0.2f;
+
+        UIManager.Instance.RefreshStamina(curStamina / maxStamina);
+        if(sprintAction.IsPressed())
+        {
+            staminaRegenDelayTimer = 0;
+        }
+        else
+        {
+            staminaRegenDelayTimer += Time.deltaTime;
+        }
+
+        if(staminaRegenDelayTimer > staminaRegenDelay)
+        {
+            curStamina += staminaRegen * Time.deltaTime;
+            curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
+        }
     }
     private void Move(Vector2 moveDir)
     {
+      
+
         var vertical = verticalMoveAction.ReadValue<float>();
-        if (sprintAction.IsPressed())
+        if (sprintAction.IsPressed() && curStamina > 0 && moveDir != Vector2.zero)
+        {
             sprintMod = sprintSpeed;
+            curStamina -= Time.deltaTime;
+        }
         else
             sprintMod = 1;
 
@@ -174,13 +199,13 @@ public class PlayerManager : MonoBehaviour
         {
             var projected = Vector3.ProjectOnPlane(targetSpeed, hit.normal);
             projected.y = Mathf.Clamp(projected.y, 0, 10000);
-            targetSpeed = (targetSpeed.normalized + projected.normalized * 0.1f).normalized * targetMag;
+            targetSpeed = (targetSpeed.normalized + projected.normalized * 0.15f).normalized * targetMag;
         }
 
         if (Physics.Raycast(transform.position, visualRoot.transform.right, out hit, 2, moveAllignLayer) 
             || Physics.Raycast(transform.position, -visualRoot.transform.right, out hit, 2, moveAllignLayer))
         {
-            var dir = (hit.transform.position - transform.position).normalized;
+            var dir = (transform.position - hit.transform.position).normalized;
             dir.y = 0;
             targetSpeed = (targetSpeed.normalized - dir * 0.1f).normalized * targetMag;
         }
@@ -191,15 +216,18 @@ public class PlayerManager : MonoBehaviour
             forward.y = 0;
             targetSpeed = (targetSpeed.normalized + (forward.normalized * (transform.position.y - maxHeight))).normalized * targetMag;
         }
-
+        if (animController.Cleaning)
+        {
+            targetSpeed = Vector3.zero;
+        }
         rb.velocity = Vector3.Lerp(rb.velocity, targetSpeed, Time.deltaTime * 10);
 
-        freelookCam.m_Lens.FieldOfView = Mathf.Lerp(freelookCam.m_Lens.FieldOfView, 40 + rb.velocity.magnitude, Time.deltaTime);
+        freelookCam.m_Lens.FieldOfView = Mathf.Lerp(freelookCam.m_Lens.FieldOfView, 40 + (rb.velocity.magnitude * 2), Time.deltaTime);
 
         var test = particle.emission;
-        test.rateOverTime = rb.velocity.magnitude - 15;
+        test.rateOverTime = rb.velocity.magnitude - (speed + 1);
 
-        targetCam.transform.localPosition = Vector3.Lerp(targetCam.transform.localPosition, new Vector3(0, 2f - (rb.velocity.magnitude / 40),0), Time.deltaTime * 5f);
+        targetCam.transform.localPosition = Vector3.Lerp(targetCam.transform.localPosition, new Vector3(0, 0.7f - (rb.velocity.magnitude / 40),0), Time.deltaTime * 5f);
     }
     private void AllignVisualRoot()
     {
@@ -207,16 +235,24 @@ public class PlayerManager : MonoBehaviour
 
         if (Mathf.Abs(Vector3.Angle(targetForward, visualRoot.transform.forward)) < 5) return;
 
-        float dot = Vector3.Dot(targetForward, visualRoot.transform.forward);
-        if (dot < 0.5f)
+        float dot = Vector3.Dot(targetForward.normalized, visualRoot.transform.forward);
+        if (dot < 0.7f)
         {
-            targetForward = targetForward + (visualRoot.transform.right * 0.1f);
+            targetForward = targetForward.normalized + (visualRoot.transform.right * 0.3f);
         }
+        targetForward = (targetForward + (Vector3.ProjectOnPlane(rb.velocity, visualRoot.transform.up))).normalized;
 
-        visualRoot.transform.forward = Vector3.Slerp(
+        if(animController.Cleaning)
+            visualRoot.transform.forward = Vector3.Slerp(
+                visualRoot.transform.forward,
+                new Vector3(visualRoot.transform.forward.x, 0, visualRoot.transform.forward.z),
+                Time.deltaTime * 10);
+        else
+            visualRoot.transform.forward = Vector3.Slerp(
                 visualRoot.transform.forward,
                 targetForward,
                 Time.deltaTime * 10);
+
 
         //Quaternion horizontal = Quaternion.LookRotation(targetForward);
 

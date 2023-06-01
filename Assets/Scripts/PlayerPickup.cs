@@ -5,24 +5,32 @@ using UnityEngine;
 public class PlayerPickup : MonoBehaviour
 {
     [HideInInspector] public bool InRange;
-    private IInteractable collectible;
+    private IInteractable collectable;
+    private PlayerAnimController animController;
+    public GameObject lastPickupGb;
+    public Vector3 lastPickupPos;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        animController = GetComponentInParent<PlayerAnimController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(lastPickupGb)
+            lastPickupPos = lastPickupGb.transform.position;
     }
 
     public void Interact()
     {
         if (!InRange) return;
-        collectible.Interact();
-        collectible = null;
+
+        if(collectable.Interact())
+            animController.PlayCleaning();
+        collectable = null;
+        lastPickupGb = null;
         InRange = false;
     }
 
@@ -30,8 +38,9 @@ public class PlayerPickup : MonoBehaviour
     {
         if (other.TryGetComponent(out IInteractable col))
         {
-            collectible = col;
+            collectable = col;
             InRange = true;
+            lastPickupGb = other.gameObject;
             UIManager.Instance.ChangeInteract(true);
         }
     }
@@ -39,7 +48,8 @@ public class PlayerPickup : MonoBehaviour
     {
         if (other.TryGetComponent(out IInteractable _))
         {
-            collectible = null;
+            collectable = null;
+            lastPickupGb = null;
             InRange = false;
             UIManager.Instance.ChangeInteract(false);
         }

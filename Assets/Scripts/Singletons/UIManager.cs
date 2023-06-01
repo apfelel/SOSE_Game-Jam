@@ -15,7 +15,7 @@ public class UIManager : MonoSingleton<UIManager>
     public static event Action<float> OnSettingsClosed;
 
     [SerializeField]
-    private Image fadeImage;
+    private Image staminaImage;
     [SerializeField] 
     private GameObject tutorial, startScreen;
     [SerializeField]
@@ -234,5 +234,10 @@ public class UIManager : MonoSingleton<UIManager>
     public void ReturnToMenu()
     {
         GameManager.Instance.ReturnToMenu();
+    }
+
+    public void RefreshStamina(float ratio)
+    {
+        staminaImage.fillAmount = ratio;
     }
 }
