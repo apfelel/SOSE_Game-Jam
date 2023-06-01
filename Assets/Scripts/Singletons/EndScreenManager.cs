@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class EndScreenManager : MonoSingleton<EndScreenManager>
 {
-    [SerializeField] private GameObject screen;
+    [SerializeField] private GameObject winScreen, loseScreen;
     private void Start()
     {
-        screen.SetActive(false);
+        winScreen.SetActive(false);
     }
     public void ShowEndscreen()
     {
-        screen.SetActive(true);
+        winScreen.SetActive(true);
+    }
+    public void ShowLoseScreen()
+    {
+        loseScreen.SetActive(true);
     }
 }

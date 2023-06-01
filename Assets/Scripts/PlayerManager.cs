@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private GameObject visualRootOffset;
+
     [SerializeField] private AudioSource windAudioSource;
     private PlayerAnimController animController;
     [SerializeField] private GameObject targetCam;
+    private GameObject CamTargetOffset;
     [SerializeField] private ParticleSystem particle;
     [SerializeField] private LayerMask moveAllignLayer;
     [SerializeField] private GameObject vCam;
@@ -35,6 +38,7 @@ public class PlayerManager : MonoBehaviour
     
     void Awake()
     {
+        CamTargetOffset = targetCam.transform.parent.gameObject;
         animController = GetComponent<PlayerAnimController>();
         curStamina = maxStamina;
         vCam.SetActive(false);
@@ -155,10 +159,13 @@ public class PlayerManager : MonoBehaviour
             curStamina = Mathf.Clamp(curStamina, 0, maxStamina);
         }
     }
+    private void LateUpdate()
+    {
+        CamTargetOffset.transform.localPosition = Vector3.Lerp(CamTargetOffset.transform.localPosition, cam.transform.right, Time.deltaTime * 30);
+
+    }
     private void Move(Vector2 moveDir)
     {
-      
-
         var vertical = verticalMoveAction.ReadValue<float>();
         if (sprintAction.IsPressed() && curStamina > 0 && moveDir != Vector2.zero)
         {
@@ -192,10 +199,10 @@ public class PlayerManager : MonoBehaviour
         var rayDistance = targetMag * 0.5f;
 
         if(Physics.Raycast(transform.position, targetSpeed.normalized, out hit, rayDistance, moveAllignLayer)
-            || Physics.Raycast(transform.position + (visualRoot.transform.right * 0.2f), targetSpeed.normalized + (visualRoot.transform.right * 0.2f), out hit, rayDistance, moveAllignLayer)
-            || Physics.Raycast(transform.position + (visualRoot.transform.right * -0.2f), targetSpeed.normalized + (visualRoot.transform.right * -0.2f), out hit, rayDistance, moveAllignLayer)
-            || Physics.Raycast(transform.position + (visualRoot.transform.up * 0.2f), targetSpeed.normalized + (visualRoot.transform.up * -0.2f), out hit, rayDistance, moveAllignLayer)
-            || Physics.Raycast(transform.position + (visualRoot.transform.up * -0.2f), targetSpeed.normalized + (visualRoot.transform.up * -0.2f), out hit, rayDistance, moveAllignLayer))
+            || Physics.Raycast(transform.position + (visualRoot.transform.right * 0.2f), targetSpeed.normalized, out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.right * -0.2f), targetSpeed.normalized, out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.up * 0.2f), targetSpeed.normalized, out hit, rayDistance, moveAllignLayer)
+            || Physics.Raycast(transform.position + (visualRoot.transform.up * -0.2f), targetSpeed.normalized, out hit, rayDistance, moveAllignLayer))
         {
             var projected = Vector3.ProjectOnPlane(targetSpeed, hit.normal);
             projected.y = Mathf.Clamp(projected.y, 0, 10000);
@@ -226,8 +233,8 @@ public class PlayerManager : MonoBehaviour
 
         var test = particle.emission;
         test.rateOverTime = rb.velocity.magnitude - (speed + 1);
-
-        targetCam.transform.localPosition = Vector3.Lerp(targetCam.transform.localPosition, new Vector3(0, 0.7f - (rb.velocity.magnitude / 40),0), Time.deltaTime * 5f);
+        visualRootOffset.transform.localPosition = Vector3.Lerp(visualRootOffset.transform.localPosition, new Vector3(0, -1 + Mathf.Clamp01(rb.velocity.magnitude + 0.1f)) / 3, Time.deltaTime / 3);
+        targetCam.transform.localPosition = Vector3.Lerp(targetCam.transform.localPosition, new Vector3(0, 0.65f - (rb.velocity.magnitude / 40),0), Time.deltaTime * 5f);
     }
     private void AllignVisualRoot()
     {
@@ -235,12 +242,18 @@ public class PlayerManager : MonoBehaviour
 
         if (Mathf.Abs(Vector3.Angle(targetForward, visualRoot.transform.forward)) < 5) return;
 
-        float dot = Vector3.Dot(targetForward.normalized, visualRoot.transform.forward);
-        if (dot < 0.7f)
+        if (targetForward.magnitude < 0.1f) targetForward = Vector3.zero;
+        else
         {
-            targetForward = targetForward.normalized + (visualRoot.transform.right * 0.3f);
+            float dot = Vector3.Dot(targetForward.normalized, visualRoot.transform.forward);
+            if (dot < 0.7f)
+            {
+                targetForward = targetForward.normalized + (visualRoot.transform.right * 0.3f);
+            }
+            targetForward = (targetForward + (Vector3.ProjectOnPlane(rb.velocity, visualRoot.transform.up))).normalized;
         }
-        targetForward = (targetForward + (Vector3.ProjectOnPlane(rb.velocity, visualRoot.transform.up))).normalized;
+       
+
 
         if(animController.Cleaning)
             visualRoot.transform.forward = Vector3.Slerp(

@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public bool[] task = new bool[3];
+    public float[] taskTimes = new float[3];
+
     public float Timer;
 
     public static event Action LVLFinished;
@@ -34,9 +38,17 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Update()
     {
-        if (InGame)
-            Timer += Time.deltaTime;
+        if (!InGame) return;
+
+        Timer += Time.deltaTime;
+        if(Timer > 60 * 5)
+        {
+            LoseLVL();
+        }
     }
+
+
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -57,12 +69,8 @@ public class GameManager : MonoSingleton<GameManager>
             maxPickups = GameObject.FindGameObjectsWithTag("Collectable").Length;
             Timer = 0;
             Time.timeScale = 0;
-            UnlockCursor();
         }
-        else
-        {
-            UnlockCursor();
-        }
+        UnlockCursor();
     }
     public void StartGame(string sceneName)
     {
@@ -88,6 +96,16 @@ public class GameManager : MonoSingleton<GameManager>
         InGame = false;
         SceneManager.LoadScene("Mainmenu");
     }
+
+    private void LoseLVL()
+    {
+        UnlockCursor();
+        Time.timeScale = 0;
+        LVLFinished?.Invoke();
+        EndScreenManager.Instance.ShowLoseScreen();
+        InGame = false;
+    }
+
     private void FinishLVL()
     {
         UnlockCursor();

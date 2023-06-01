@@ -38,11 +38,13 @@ public class LevitatingObject : MonoBehaviour
 
             var direction = (thirdChild.transform.position - firstChild.transform.position).normalized;
             var gb = new GameObject();
+            gb.transform.rotation = Quaternion.Slerp(gb.transform.rotation, thirdChild.transform.rotation, 0.5f);
             gb.transform.position = secondChild.transform.position - direction * smoothness;
             targets.Add(gb);
             gb.transform.SetParent(targetParent.transform);
             targets.Add(secondChild);
             gb = new GameObject();
+            gb.transform.rotation = Quaternion.Slerp(gb.transform.rotation, firstChild.transform.rotation, 0.5f);
             gb.transform.position = secondChild.transform.position + direction * smoothness;
             targets.Add(gb);
             gb.transform.SetParent(targetParent.transform);
@@ -59,6 +61,8 @@ public class LevitatingObject : MonoBehaviour
             GameObject thirdChild = targets[(i + 1) % childs.Count];
 
             secondChild.transform.position = (secondChild.transform.position) * 0.7f + (firstChild.transform.position * 0.15f) + (thirdChild.transform.position * 0.15f);
+            secondChild.transform.rotation = Quaternion.Slerp(secondChild.transform.rotation, firstChild.transform.rotation, 0.15f);
+            secondChild.transform.rotation = Quaternion.Slerp(secondChild.transform.rotation, thirdChild.transform.rotation, 0.15f);
         }
     }
 
@@ -68,8 +72,8 @@ public class LevitatingObject : MonoBehaviour
         if (!floating)
         {
             targetPickup.transform.position += (startPos - targetPickup.transform.position).normalized * Time.deltaTime;
-            Debug.Log((startPos - transform.position).normalized * Time.deltaTime);
-            if (Vector3.Distance(startPos, transform.position) > (startPos - (transform.position).normalized * Time.deltaTime).magnitude)
+            targetPickup.transform.rotation = Quaternion.Slerp(targetPickup.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+            if (Vector3.Distance(startPos, transform.position) > (startPos - (targetPickup.transform.position).normalized * Time.deltaTime).magnitude)
             {
                 targetPickup.transform.position = startPos;
                 enabled = false;
@@ -84,8 +88,14 @@ public class LevitatingObject : MonoBehaviour
         timer += Time.deltaTime;
         targetPickup.transform.position = 
             Vector3.Lerp(
-                targets[(Mathf.FloorToInt(timer)) % targets.Count].transform.position,
+                targets[Mathf.FloorToInt(timer) % targets.Count].transform.position,
                 targets[(Mathf.FloorToInt(timer) + 1) % targets.Count].transform.position,
+                timer % 1f);
+
+        targetPickup.transform.rotation =
+            Quaternion.Slerp(
+                targets[Mathf.FloorToInt(timer) % targets.Count].transform.rotation,
+                targets[(Mathf.FloorToInt(timer) + 1) % targets.Count].transform.rotation,
                 timer % 1f);
 
     }

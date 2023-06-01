@@ -33,7 +33,7 @@ Transform:
   - {fileID: 4205590388818194177}
   - {fileID: 6508112302317657923}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3636049682283343612
 MonoBehaviour:
@@ -55,6 +55,15 @@ MonoBehaviour:
   - Name: ButtonHover
     Clips:
     - {fileID: 8300000, guid: 478b006afb422a941936ed46f72b2d3a, type: 3}
+  - Name: Win
+    Clips:
+    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
+  - Name: Lose
+    Clips:
+    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
+  - Name: Clean
+    Clips:
+    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
   _musicList: []
   _ambientList: []
 --- !u!82 &7365818959898392589
