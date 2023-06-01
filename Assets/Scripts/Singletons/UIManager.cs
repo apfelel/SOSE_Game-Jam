@@ -11,8 +11,11 @@ using UnityEngine.UI;
 public class UIManager : MonoSingleton<UIManager>
 {
     public static event Action OnUnPause;
+    public static event Action OnPause;
     public static event Action<float> OnSettingsClosed;
 
+    [SerializeField]
+    private Image fadeImage;
     [SerializeField] 
     private GameObject tutorial, startScreen;
     [SerializeField]
@@ -71,6 +74,8 @@ public class UIManager : MonoSingleton<UIManager>
         _pauseMenue.SetActive(false);
         _settingMenue.SetActive(false);
         interactionImage.enabled = false;
+
+        OnSettingsClosed?.Invoke(sensitivity);
     }
     private void Update()
     {
@@ -79,6 +84,7 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void Pause()
     {
+        OnPause?.Invoke();
         IsPaused = true;
         _settingMenue.SetActive(false);
         _pauseMenue.SetActive(true);
@@ -133,20 +139,22 @@ public class UIManager : MonoSingleton<UIManager>
 
     public void CloseSettings()
     {
+        PlayerPrefs.Save();
+        OnSettingsClosed?.Invoke(PlayerPrefs.GetFloat("Sensitivity"));
+        InSetting = false;
         if (GameManager.Instance.InGame)
         {
             _settingMenue.SetActive(false);
             _pauseMenue.SetActive(true);
+            _pauseMenue.GetComponentInChildren<Selectable>().Select();
+            UnPause();
         }
         else
         {
             _settingMenue.SetActive(false);
             _pauseMenue.SetActive(false);
         }
-        _pauseMenue.GetComponentInChildren<Selectable>().Select();
-        InSetting = false;
-        PlayerPrefs.Save();
-        OnSettingsClosed?.Invoke(PlayerPrefs.GetFloat("Sensitivity"));
+        
     }
     public void ChangeMusicVolume(float value)
     {
@@ -190,15 +198,29 @@ public class UIManager : MonoSingleton<UIManager>
         curPickupsCount.text = GameManager.Instance.PickupCount.ToString();
     }
 
-    public void FadeIn()
-    {
-
-    }
-
-    public void FadeOut()
-    {
-
-    }
+    //public void FadeIn(bool instant = false)
+    //{
+    //    if(!instant)
+    //        StartCoroutine(Fade(-1));
+    //    else
+    //        fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);
+    //}
+    //IEnumerator Fade(float mod)
+    //{
+    //    for(int i = 0; i < 30; i++)
+    //    {
+    //        yield return new WaitForEndOfFrame();
+    //        fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, (1 / 30f) * mod);
+    //    }
+    //    fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, Mathf.Clamp01(mod));
+    //}
+    //public void FadeOut(bool instant = false)
+    //{
+    //    if (!instant)
+    //        StartCoroutine(Fade(1));
+    //    else
+    //        fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 1);
+    //}
 
     public void ShowTutorial()
     {
@@ -211,6 +233,6 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void ReturnToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        GameManager.Instance.ReturnToMenu();
     }
 }

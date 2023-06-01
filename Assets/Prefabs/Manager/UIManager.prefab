@@ -471,7 +471,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4726517222529372287
 RectTransform:
   m_ObjectHideFlags: 0
@@ -677,6 +677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 880802768968309505}
   - component: {fileID: 545369106477420926}
+  - component: {fileID: 5963558758513432389}
   m_Layer: 5
   m_Name: Music
   m_TagString: Untagged
@@ -770,6 +771,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5963558758513432389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415998469522349513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ca3905dd727b44a6ea9ae5ba3c593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: 0
 --- !u!1 &1419992726283895396
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6398482857734890302}
   - component: {fileID: 3766489355939162972}
+  - component: {fileID: 8001023862026894947}
   m_Layer: 5
   m_Name: SensSlider
   m_TagString: Untagged
@@ -1201,7 +1216,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5838619535930508969}
   m_Direction: 0
   m_MinValue: 0.001
-  m_MaxValue: 1
+  m_MaxValue: 10
   m_WholeNumbers: 0
   m_Value: 0.001
   m_OnValueChanged:
@@ -1209,7 +1224,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6444163774346624247}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ChangeMasterVolume
+        m_MethodName: ChangeSensitivity
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1219,6 +1234,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8001023862026894947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769949264674787907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ca3905dd727b44a6ea9ae5ba3c593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: 0
 --- !u!1 &2080027140371916547
 GameObject:
   m_ObjectHideFlags: 0
@@ -3156,7 +3184,7 @@ Transform:
   m_Children:
   - {fileID: 8057232293609276411}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6444163774346624247
 MonoBehaviour:
@@ -3170,6 +3198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3903a8406667c243acf84d2d5644a30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeImage: {fileID: 0}
   tutorial: {fileID: 8324984451892110359}
   startScreen: {fileID: 7261531643010009195}
   HUD: {fileID: 4928264302895464594}
@@ -4189,7 +4218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1330572558013103695
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4362,6 +4391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4258474617011488499}
   - component: {fileID: 7150758483917103649}
+  - component: {fileID: 1306039912510271490}
   m_Layer: 5
   m_Name: Master
   m_TagString: Untagged
@@ -4455,6 +4485,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1306039912510271490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5329072324833372170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ca3905dd727b44a6ea9ae5ba3c593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: 0
 --- !u!1 &5468667654352503179
 GameObject:
   m_ObjectHideFlags: 0
@@ -5149,7 +5192,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Master
+  m_text: Sensitivity
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6220,6 +6263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8185393397978163732}
   - component: {fileID: 6078983323323598751}
+  - component: {fileID: 6615182139507071552}
   m_Layer: 5
   m_Name: SFX
   m_TagString: Untagged
@@ -6313,6 +6357,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6615182139507071552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8185737714428934713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ca3905dd727b44a6ea9ae5ba3c593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: 0
 --- !u!1 &8324984451892110359
 GameObject:
   m_ObjectHideFlags: 0
@@ -6576,6 +6633,7 @@ GameObject:
   - component: {fileID: 8817305988336784816}
   - component: {fileID: 3243384193971535882}
   - component: {fileID: 8029644469028098002}
+  - component: {fileID: 2980693505731166306}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -6698,6 +6756,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2980693505731166306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8772136017182171948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 138ca3905dd727b44a6ea9ae5ba3c593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: 0
 --- !u!1 &8896331025240806347
 GameObject:
   m_ObjectHideFlags: 0

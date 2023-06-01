@@ -53,6 +53,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (InGame)
         {
+            pickupCount = 0;
             maxPickups = GameObject.FindGameObjectsWithTag("Collectable").Length;
             Timer = 0;
             Time.timeScale = 0;

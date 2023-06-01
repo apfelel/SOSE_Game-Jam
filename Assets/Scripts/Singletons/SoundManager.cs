@@ -92,8 +92,6 @@ public class SoundManager : MonoSingleton<SoundManager>
     }
     public void PlaySound(string name, float volume)
     {
-        if (name == "Step")
-            name = (_cave ? "Stone" : "Grass") + "Step";
         var clips = _soundsDic[name];
         _sfxSource.PlayOneShot(clips?[Random.Range(0, clips.Count - 1)], volume);
     }

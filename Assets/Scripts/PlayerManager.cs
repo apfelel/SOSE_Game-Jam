@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private AudioSource windAudioSource;
+
     [SerializeField] private GameObject targetCam;
     [SerializeField] private ParticleSystem particle;
     [SerializeField] private LayerMask moveAllignLayer;
@@ -35,6 +37,7 @@ public class PlayerManager : MonoBehaviour
         GameManager.LVLFinished += LVLFinished;
         GameManager.LVLStart += UnlockInput;
         UIManager.OnUnPause += UnlockInput;
+        UIManager.OnPause += OnPause;
         UIManager.OnSettingsClosed += RefreshSensitivity;
         cam = Camera.main.transform;
         rb = GetComponent<Rigidbody>();
@@ -54,6 +57,11 @@ public class PlayerManager : MonoBehaviour
         lookAction = input.Player.Look;
 
         verticalMoveAction = input.Player.VerticalMove;
+    }
+
+    private void OnPause()
+    {
+        windAudioSource.volume = 0;
     }
 
     private void RefreshSensitivity(float Value)
@@ -98,6 +106,7 @@ public class PlayerManager : MonoBehaviour
         GameManager.LVLStart -= UnlockInput;
         UIManager.OnUnPause -= UnlockInput;
         UIManager.OnSettingsClosed -= RefreshSensitivity;
+        UIManager.OnPause -= OnPause;
         pauseAction.Disable();
         verticalMoveAction.Disable();
         moveAction.Disable();
@@ -124,8 +133,8 @@ public class PlayerManager : MonoBehaviour
         if (UIManager.Instance.IsPaused) return;
         Move(moveAction.ReadValue<Vector2>());
         AllignVisualRoot();
+        windAudioSource.volume = (rb.velocity.magnitude / 30) - 0.2f;
     }
-
     private void Move(Vector2 moveDir)
     {
         var vertical = verticalMoveAction.ReadValue<float>();
@@ -165,7 +174,15 @@ public class PlayerManager : MonoBehaviour
         {
             var projected = Vector3.ProjectOnPlane(targetSpeed, hit.normal);
             projected.y = Mathf.Clamp(projected.y, 0, 10000);
-            targetSpeed = (targetSpeed.normalized + projected.normalized * 0.25f).normalized * targetMag;
+            targetSpeed = (targetSpeed.normalized + projected.normalized * 0.1f).normalized * targetMag;
+        }
+
+        if (Physics.Raycast(transform.position, visualRoot.transform.right, out hit, 2, moveAllignLayer) 
+            || Physics.Raycast(transform.position, -visualRoot.transform.right, out hit, 2, moveAllignLayer))
+        {
+            var dir = (hit.transform.position - transform.position).normalized;
+            dir.y = 0;
+            targetSpeed = (targetSpeed.normalized - dir * 0.1f).normalized * targetMag;
         }
 
         if(transform.position.y > maxHeight && targetSpeed.y > 0)

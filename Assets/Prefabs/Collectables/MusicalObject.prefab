@@ -34,7 +34,7 @@ Transform:
   m_Children:
   - {fileID: 329976307719156315}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6837374632147353957
 MeshFilter:
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0e1be6c03b06a6642ad24c8062a3b96a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -163,7 +163,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2329617586729926462, guid: a3f19a676232c4a488b0163457c7040e,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 866e2b28676c33b4881d229d8117bb44, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -172,11 +172,11 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
-  MaxDistance: 35.51
+  MaxDistance: 48.9
   Pan2D: 0
-  rolloffMode: 2
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -184,59 +184,32 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.019197542
-      value: 1
-      inSlope: -52.11083
-      outSlope: -52.11083
+      time: 0.15230973
+      value: 0.9935608
+      inSlope: 0.09798528
+      outSlope: 0.09798528
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.6551283
       outWeight: 0
     - serializedVersion: 3
-      time: 0.038395084
-      value: 0.5
-      inSlope: -13.027707
-      outSlope: -13.027707
+      time: 0.34101993
+      value: 0.8098755
+      inSlope: -1.0583421
+      outSlope: -1.0583421
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.5340595
     - serializedVersion: 3
-      time: 0.07679017
-      value: 0.25
-      inSlope: -3.2569268
-      outSlope: -3.2569268
+      time: 0.63516486
+      value: 0.41070557
+      inSlope: -1.1584964
+      outSlope: -1.1584964
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.15358034
-      value: 0.125
-      inSlope: -0.8142317
-      outSlope: -0.8142317
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.30716068
-      value: 0.0625
-      inSlope: -0.20355792
-      outSlope: -0.20355792
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.61432135
-      value: 0.03125
-      inSlope: -0.05088948
-      outSlope: -0.05088948
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      outWeight: 0.40917614
     - serializedVersion: 3
       time: 1
       value: 0
