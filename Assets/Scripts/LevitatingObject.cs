@@ -73,7 +73,7 @@ public class LevitatingObject : MonoBehaviour
         {
             targetPickup.transform.position += (startPos - targetPickup.transform.position).normalized * Time.deltaTime;
             targetPickup.transform.rotation = Quaternion.Slerp(targetPickup.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
-            if (Vector3.Distance(startPos, transform.position) > (startPos - (targetPickup.transform.position).normalized * Time.deltaTime).magnitude)
+            if (Vector3.Distance(startPos, targetPickup.transform.position) < ((startPos - targetPickup.transform.position).normalized * Time.deltaTime).magnitude)
             {
                 targetPickup.transform.position = startPos;
                 enabled = false;
@@ -104,6 +104,7 @@ public class LevitatingObject : MonoBehaviour
     {
         foreach(var target in targets)
         {
+            Gizmos.DrawLine(target.transform.position, target.transform.forward);
             Gizmos.DrawSphere(target.transform.position, 0.5f);
         }
     }

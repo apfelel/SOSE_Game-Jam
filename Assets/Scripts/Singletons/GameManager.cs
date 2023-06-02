@@ -70,6 +70,13 @@ public class GameManager : MonoSingleton<GameManager>
             Timer = 0;
             Time.timeScale = 0;
         }
+        else
+        {
+            if(task.All(t => t == true))
+            {
+                Debug.Log("win");
+            }
+        }
         UnlockCursor();
     }
     public void StartGame(string sceneName)

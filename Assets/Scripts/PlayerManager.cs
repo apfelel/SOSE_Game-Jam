@@ -167,7 +167,7 @@ public class PlayerManager : MonoBehaviour
     private void Move(Vector2 moveDir)
     {
         var vertical = verticalMoveAction.ReadValue<float>();
-        if (sprintAction.IsPressed() && curStamina > 0 && moveDir != Vector2.zero)
+        if (sprintAction.IsPressed() && curStamina > 0 && moveDir != Vector2.zero &! animController.Cleaning)
         {
             sprintMod = sprintSpeed;
             curStamina -= Time.deltaTime;

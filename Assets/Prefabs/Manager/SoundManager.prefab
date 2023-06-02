@@ -64,6 +64,9 @@ MonoBehaviour:
   - Name: Clean
     Clips:
     - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
+  - Name: CleanseLevitation
+    Clips:
+    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
   _musicList: []
   _ambientList: []
 --- !u!82 &7365818959898392589

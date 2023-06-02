@@ -23,6 +23,7 @@ public class Pickup : MonoBehaviour, IInteractable
         }
         else
         {
+            SoundManager.Instance.PlaySound("CleanseLevitation", 1f);
             GetComponentInParent<LevitatingObject>().ResetPosition();
             Destroy(this);
             return false;
