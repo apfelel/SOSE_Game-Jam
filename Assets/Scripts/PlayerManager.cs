@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject visualRootOffset;
@@ -133,7 +134,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext obj)
     {
-        playerPickup.Interact();
+        if(!animController.Cleaning)
+            playerPickup.Interact();
     }
 
     void FixedUpdate()
@@ -161,8 +163,7 @@ public class PlayerManager : MonoBehaviour
     }
     private void LateUpdate()
     {
-        CamTargetOffset.transform.localPosition = Vector3.Lerp(CamTargetOffset.transform.localPosition, cam.transform.right, Time.deltaTime * 30);
-
+        CamTargetOffset.transform.localPosition = Vector3.Lerp(CamTargetOffset.transform.localPosition, cam.transform.right * 0.75f, Time.deltaTime * 30);
     }
     private void Move(Vector2 moveDir)
     {
@@ -209,12 +210,12 @@ public class PlayerManager : MonoBehaviour
             targetSpeed = (targetSpeed.normalized + projected.normalized * 0.15f).normalized * targetMag;
         }
 
-        if (Physics.Raycast(transform.position, visualRoot.transform.right, out hit, 2, moveAllignLayer) 
-            || Physics.Raycast(transform.position, -visualRoot.transform.right, out hit, 2, moveAllignLayer))
+        if (Physics.Raycast(transform.position, visualRoot.transform.right, out hit, 1, moveAllignLayer) 
+            || Physics.Raycast(transform.position, -visualRoot.transform.right, out hit, 1, moveAllignLayer))
         {
             var dir = (transform.position - hit.transform.position).normalized;
             dir.y = 0;
-            targetSpeed = (targetSpeed.normalized - dir * 0.1f).normalized * targetMag;
+            targetSpeed = (targetSpeed.normalized + dir * 0.3f).normalized * targetMag;
         }
 
         if(transform.position.y > maxHeight && targetSpeed.y > 0)

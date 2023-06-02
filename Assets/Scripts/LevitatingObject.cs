@@ -16,10 +16,19 @@ public class LevitatingObject : MonoBehaviour
     bool floating = true;
 
     Vector3 startPos;
+    Quaternion startRot;
     // Start is called before the first frame update
     void Start()
     {
         startPos = targetPickup.transform.position;
+        startRot = targetParent.transform.rotation;
+        if (targetParent.transform.childCount < 2)
+        {
+            targetPickup.transform.rotation = targetParent.transform.GetChild(0).transform.rotation;
+            targetPickup.transform.position = targetParent.transform.GetChild(0).transform.position;
+            return;
+        }
+
         foreach(Transform child in targetParent.transform)
         {
             childs.Add(child.gameObject);
@@ -72,11 +81,14 @@ public class LevitatingObject : MonoBehaviour
         if (!floating)
         {
             targetPickup.transform.position += (startPos - targetPickup.transform.position).normalized * Time.deltaTime;
-            targetPickup.transform.rotation = Quaternion.Slerp(targetPickup.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+            targetPickup.transform.rotation = Quaternion.Slerp(targetPickup.transform.rotation, startRot, Time.deltaTime);
             if (Vector3.Distance(startPos, targetPickup.transform.position) < ((startPos - targetPickup.transform.position).normalized * Time.deltaTime).magnitude)
             {
+                if(Quaternion.Angle(startRot, targetPickup.transform.rotation) < 3)
+                { 
                 targetPickup.transform.position = startPos;
                 enabled = false;
+                    }
             }
             return;
         }
@@ -85,6 +97,10 @@ public class LevitatingObject : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        if (targets.Count == 0)
+            return;
+        
         timer += Time.deltaTime;
         targetPickup.transform.position = 
             Vector3.Lerp(

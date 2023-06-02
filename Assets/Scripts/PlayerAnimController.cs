@@ -20,7 +20,6 @@ public class PlayerAnimController : MonoBehaviour
     }
     public void PlayCleaning()
     {
-        rb.useGravity = true;
         anim.Play("Cleaning");
         Cleaning = true;
 
@@ -28,12 +27,11 @@ public class PlayerAnimController : MonoBehaviour
     }
     IEnumerator TestDelay()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         EndCleaning();
     }
     public void EndCleaning()
     {
-        rb.useGravity = false;
         Cleaning = false;
     }
 }

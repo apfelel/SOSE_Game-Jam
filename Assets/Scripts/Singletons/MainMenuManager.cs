@@ -6,12 +6,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Cinemachine;
 
-public class MainMenuManager : MonoBehaviour
+public class MainMenuManager : MonoSingleton<MainMenuManager>
 {
     [SerializeField] private GameObject taskMenu, menu;
     [SerializeField] private CanvasGroup menuGroup, tasksGroup;
     [SerializeField] private CinemachineVirtualCamera menuCam, taskMenuCam;
-
+    [SerializeField] private Button Task2Btn, Task3Btn;
+    [SerializeField] private GameObject Task2GO, Task3GO;
+    [SerializeField] private GameObject credits;
     //[SerializeField] private List<CinemachineVirtualCamera> taskCams;
     //[SerializeField] private List<CanvasGroup> taskGroups;
     //[SerializeField] private List<GameObject> taskMenus;
@@ -19,6 +21,21 @@ public class MainMenuManager : MonoBehaviour
     {
         UIManager.OnUnPause += UnPause;
         Time.timeScale = 1;
+
+        if(!GameManager.Instance.firstTime)
+        {
+            tasksGroup.alpha = 0;
+            menu.SetActive(false);
+            menuCam.Priority = 0;
+            taskMenuCam.Priority = 10;
+            taskMenu.SetActive(true);
+            taskMenu.GetComponentInChildren<Selectable>().Select();
+            tasksGroup.alpha = 1;
+            Task2Btn.gameObject.SetActive(GameManager.Instance.task[0]);
+            Task2GO.gameObject.SetActive(GameManager.Instance.task[0]);
+            Task3Btn.gameObject.SetActive(GameManager.Instance.task[1]);
+            Task3GO.gameObject.SetActive(GameManager.Instance.task[1]);
+        }
     }
 
     private void OnDisable()
@@ -27,6 +44,7 @@ public class MainMenuManager : MonoBehaviour
     }
     private void UnPause()
     {
+        Debug.Log("test");
         menu.GetComponentsInChildren<Selectable>()[1].Select();
     }
 
@@ -37,6 +55,10 @@ public class MainMenuManager : MonoBehaviour
 
     public void ShowTasks()
     {
+        Task2Btn.gameObject.SetActive(GameManager.Instance.task[0]);
+        Task2GO.gameObject.SetActive(GameManager.Instance.task[0]);
+        Task3Btn.gameObject.SetActive(GameManager.Instance.task[1]);
+        Task3GO.gameObject.SetActive(GameManager.Instance.task[1]);
         StartCoroutine(ToTasks());
     }
 
@@ -75,6 +97,19 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void ShowCredits()
+    {
+        if (GameManager.Instance.creditsShown) return;
+
+        GameManager.Instance.creditsShown = true;
+        credits.SetActive(true);
+        credits.GetComponentInChildren<Selectable>().Select();
+    }
+    public void CloseCredits()
+    {
+        credits.SetActive(false);
+        menu.GetComponentInChildren<Selectable>().Select();
+    }
     //IEnumerator ToTask(int task)
     //{
     //    for (int i = 0; i < 30; i++)

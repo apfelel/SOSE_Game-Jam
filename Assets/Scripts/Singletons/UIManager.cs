@@ -52,6 +52,7 @@ public class UIManager : MonoSingleton<UIManager>
     [HideInInspector]
     public bool InSetting;
 
+    public int timeLeft;
     private void Start()
     {
         var sensitivity = PlayerPrefs.GetFloat("Sensitivity", -1);
@@ -79,8 +80,19 @@ public class UIManager : MonoSingleton<UIManager>
     }
     private void Update()
     {
-        if(GameManager.Instance.InGame && timer)
-            timer.text = GameManager.Instance.Timer.ToString("n2");
+        if (GameManager.Instance.InGame && timer)
+        {
+            int time = Mathf.FloorToInt((GameManager.Instance.Timer / 60) + 55);
+            if (time == 60)
+            {
+                time = 0;
+                timer.text = timeLeft + 1 + " : " + time.ToString("n0");
+            }
+            else
+            {
+                timer.text = timeLeft + 1 + " : " + time.ToString("n0");
+            }
+        }
     }
     public void Pause()
     {
@@ -102,10 +114,10 @@ public class UIManager : MonoSingleton<UIManager>
         _pauseMenue.SetActive(false);
         _settingMenue.SetActive(false);
         Time.timeScale = 1f;
+        OnUnPause?.Invoke();
         if (!GameManager.Instance.InGame) return;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        OnUnPause?.Invoke();
         PlayerPrefs.Save();
         OnSettingsClosed?.Invoke(PlayerPrefs.GetFloat("Sensitivity"));
     }
@@ -147,14 +159,14 @@ public class UIManager : MonoSingleton<UIManager>
             _settingMenue.SetActive(false);
             _pauseMenue.SetActive(true);
             _pauseMenue.GetComponentInChildren<Selectable>().Select();
-            UnPause();
         }
         else
         {
             _settingMenue.SetActive(false);
             _pauseMenue.SetActive(false);
+            UnPause();
         }
-        
+
     }
     public void ChangeMusicVolume(float value)
     {

@@ -9,10 +9,11 @@ public class PlayerPickup : MonoBehaviour
     private PlayerAnimController animController;
     public GameObject lastPickupGb;
     public Vector3 lastPickupPos;
-
+    private Collider col;
     // Start is called before the first frame update
     void Start()
     {
+        col = GetComponent<Collider>();
         animController = GetComponentInParent<PlayerAnimController>();
     }
 
@@ -26,9 +27,10 @@ public class PlayerPickup : MonoBehaviour
     public void Interact()
     {
         if (!InRange) return;
-
-        if(collectable.Interact())
-            animController.PlayCleaning();
+        col.enabled = false;
+        col.enabled = true;
+        collectable.Interact();
+        animController.PlayCleaning();
         collectable = null;
         lastPickupGb = null;
         InRange = false;

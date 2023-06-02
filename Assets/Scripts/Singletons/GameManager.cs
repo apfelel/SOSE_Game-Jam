@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public bool Keyboard;
+
     public bool[] task = new bool[3];
     public float[] taskTimes = new float[3];
 
@@ -15,8 +17,8 @@ public class GameManager : MonoSingleton<GameManager>
     public static event Action LVLFinished;
     public static event Action LVLStart;
 
-
-    private bool firstTime = true;
+    public bool creditsShown;
+    public bool firstTime = true;
     private int pickupCount = 0;
     private int maxPickups = 0;
     public int PickupCount
@@ -74,7 +76,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             if(task.All(t => t == true))
             {
-                Debug.Log("win");
+                MainMenuManager.Instance.ShowCredits();
             }
         }
         UnlockCursor();
