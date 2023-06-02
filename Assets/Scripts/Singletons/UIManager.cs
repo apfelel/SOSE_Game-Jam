@@ -27,7 +27,7 @@ public class UIManager : MonoSingleton<UIManager>
     [SerializeField]
     private TextMeshProUGUI timer;
     [SerializeField]
-    private Image interactionImage;
+    private GameObject interactionImage;
     [Space]
     [SerializeField]
     private Slider _musicSlider;
@@ -74,7 +74,7 @@ public class UIManager : MonoSingleton<UIManager>
             HUD.SetActive(false);
         _pauseMenue.SetActive(false);
         _settingMenue.SetActive(false);
-        interactionImage.enabled = false;
+        interactionImage.SetActive(false);
 
         OnSettingsClosed?.Invoke(sensitivity);
     }
@@ -203,7 +203,7 @@ public class UIManager : MonoSingleton<UIManager>
     }
     public void ChangeInteract(bool active)
     {
-        interactionImage.enabled = active;
+        interactionImage.SetActive(active);
     }
     public void RefreshPickup()
     {

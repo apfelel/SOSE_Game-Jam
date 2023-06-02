@@ -6,7 +6,7 @@ public class SwitchControlls : MonoBehaviour
 {
 
     public GameObject keyboard, gamepad;
-    void Start()
+    void OnEnable()
     {
         if(GameManager.Instance.Keyboard)
         {
