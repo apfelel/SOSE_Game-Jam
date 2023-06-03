@@ -9,17 +9,27 @@ public class Instrument : MonoBehaviour, IInteractable
     public GameObject particleSystemGB;
     public bool Interact()
     {
+        
+        StartCoroutine(WaitSec());
+        UIManager.Instance.ChangeInteract(false);
+        return false;
+    }
+
+    IEnumerator WaitSec()
+    {
+       
+
+        Destroy(GetComponent<Collider>());
+        yield return new WaitForSeconds(1.2f);
         var p = Instantiate(particleSystemGB);
         p.transform.parent = null;
         p.transform.position = GetComponentInChildren<VisualEffect>().transform.position;
 
-        audioSource.enabled = false;
         GameManager.Instance.PickupCount++;
-        UIManager.Instance.ChangeInteract(false);
-        Destroy(this);
-        SoundManager.Instance.PlaySound("CleanseLevitation", 1f);
+        audioSource.enabled = false;
         GetComponentInChildren<VisualEffect>().SetInt("Particle", 0);
-        return false;
+        SoundManager.Instance.PlaySound("CleanseLevitation", 1f);
+        Destroy(this);
     }
 
 }
