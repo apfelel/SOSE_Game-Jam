@@ -33,7 +33,7 @@ Transform:
   - {fileID: 4205590388818194177}
   - {fileID: 6508112302317657923}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3636049682283343612
 MonoBehaviour:
@@ -63,11 +63,19 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
   - Name: Clean
     Clips:
-    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
+    - {fileID: 8300000, guid: b9330e156ddcc96428ce48bc8a6d206a, type: 3}
   - Name: CleanseLevitation
     Clips:
-    - {fileID: 8300000, guid: 61f19870624ce4249860d72ecc243275, type: 3}
-  _musicList: []
+    - {fileID: 8300000, guid: b9330e156ddcc96428ce48bc8a6d206a, type: 3}
+  _musicList:
+  - Name: Einhorn
+    Clip: {fileID: 8300000, guid: 422c584e001013245a4abb8c9ea081e1, type: 3}
+  - Name: Polter
+    Clip: {fileID: 8300000, guid: cb427be44951e10438c04256a0ed260b, type: 3}
+  - Name: Satyr
+    Clip: {fileID: 8300000, guid: 07e0646a91864144ab6e42fa274e1f1d, type: 3}
+  - Name: Main
+    Clip: {fileID: 8300000, guid: e76c1a76453af3e45944a3b3005473dc, type: 3}
   _ambientList: []
 --- !u!82 &7365818959898392589
 AudioSource:
@@ -209,11 +217,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7988239966326863376, guid: a3f19a676232c4a488b0163457c7040e,
     type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: 49f5831bece6a994295964f187bacacf, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -338,7 +346,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -899781869797698663, guid: a3f19a676232c4a488b0163457c7040e,
     type: 2}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: e76c1a76453af3e45944a3b3005473dc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

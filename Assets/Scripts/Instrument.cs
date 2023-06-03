@@ -20,7 +20,7 @@ public class Instrument : MonoBehaviour, IInteractable
        
 
         Destroy(GetComponent<Collider>());
-        yield return new WaitForSeconds(1.2f);
+        yield return new WaitForSeconds(1.3f);
         var p = Instantiate(particleSystemGB);
         p.transform.parent = null;
         p.transform.position = GetComponentInChildren<VisualEffect>().transform.position;

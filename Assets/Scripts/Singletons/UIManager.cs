@@ -78,11 +78,13 @@ public class UIManager : MonoSingleton<UIManager>
 
         OnSettingsClosed?.Invoke(sensitivity);
     }
+
+    public int TimeToFinish;
     private void Update()
     {
         if (GameManager.Instance.InGame && timer)
         {
-            int time = Mathf.FloorToInt((GameManager.Instance.Timer / 60) + 55);
+            int time = Mathf.FloorToInt((GameManager.Instance.Timer / 60) + (60 - TimeToFinish));
             if (time == 60)
             {
                 time = 0;

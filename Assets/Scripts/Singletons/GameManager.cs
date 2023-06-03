@@ -42,8 +42,8 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (!InGame) return;
 
-        Timer += Time.deltaTime;
-        if(Timer > 60 * 5)
+        Timer += Time.deltaTime * 2;
+        if(Timer > 60 * UIManager.Instance.TimeToFinish)
         {
             LoseLVL();
         }

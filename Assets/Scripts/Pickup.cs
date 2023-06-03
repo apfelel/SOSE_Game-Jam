@@ -21,7 +21,6 @@ public class Pickup : MonoBehaviour, IInteractable
         else
         {
             StartCoroutine(WaitSec2());
-            Destroy(this);
             return false;
         }
     }
@@ -48,6 +47,7 @@ public class Pickup : MonoBehaviour, IInteractable
         p.transform.position = transform.position;
 
         GameManager.Instance.PickupCount++;
+        GetComponentInParent<LevitatingObject>().ResetPosition();
         Destroy(this);
         SoundManager.Instance.PlaySound("CleanseLevitation", 1f);
     }

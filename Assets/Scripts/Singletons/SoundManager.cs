@@ -49,32 +49,32 @@ public class SoundManager : MonoSingleton<SoundManager>
         var _sfxVolume = PlayerPrefs.GetFloat("SfxVolume", -1);
         if (_sfxVolume == -1)
         {
-            _sfxVolume = 1;
-            PlayerPrefs.SetFloat("SfxVolume", 1);
+            _sfxVolume = 0.5f;
+            PlayerPrefs.SetFloat("SfxVolume", 0.5f);
         }
         ChangeVolume(AudioNames.SFX, _sfxVolume);
 
         var _masterVolume = PlayerPrefs.GetFloat("MasterVolume", -1);
         if (_masterVolume == -1)
         {
-            _masterVolume = 1;
-            PlayerPrefs.SetFloat("MasterVolume", 1);
+            _masterVolume = 0.5f;
+            PlayerPrefs.SetFloat("MasterVolume", 0.5f);
         }
         ChangeVolume(AudioNames.Master, _masterVolume);
 
         var _ambientVolume = PlayerPrefs.GetFloat("AmbientVolume", -1);
         if (_ambientVolume == -1)
         {
-            _ambientVolume = 1;
-            PlayerPrefs.SetFloat("AmbientVolume", 1);
+            _ambientVolume = 0.5f;
+            PlayerPrefs.SetFloat("AmbientVolume", 0.5f);
         }
         ChangeVolume(AudioNames.Ambient, _ambientVolume);
 
         var _musicVolume = PlayerPrefs.GetFloat("MusicVolume", -1);
         if (_musicVolume == -1)
         {
-            _musicVolume = 1;
-            PlayerPrefs.SetFloat("MusicVolume", 1);
+            _musicVolume = 0.5f;
+            PlayerPrefs.SetFloat("MusicVolume", 0.5f);
         }
         ChangeVolume(AudioNames.Music, _musicVolume);
        
@@ -98,6 +98,7 @@ public class SoundManager : MonoSingleton<SoundManager>
 
     public void PlayMusic(string name)
     {
+        Debug.Log(name);
         _musicSource.clip = _musicDic.GetValueOrDefault(name);
         _musicSource.Play();
     }
