@@ -215,7 +215,7 @@ public class PlayerManager : MonoBehaviour
         {
             var dir = (transform.position - hit.transform.position).normalized;
             dir.y = 0;
-            targetSpeed = (targetSpeed.normalized + dir * 0.3f).normalized * targetMag;
+            targetSpeed = (targetSpeed.normalized - (dir * 0.3f)).normalized * targetMag;
         }
 
         if(transform.position.y > maxHeight && targetSpeed.y > 0)
