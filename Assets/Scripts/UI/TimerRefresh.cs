@@ -8,6 +8,6 @@ public class TimerRefresh : MonoBehaviour
     public int index;
     private void Start()
     {
-        GetComponent<TextMeshProUGUI>().text = GameManager.Instance.taskTimes[index] == 0? "/": GameManager.Instance.taskTimes[index].ToString("n2");
+        GetComponent<TextMeshProUGUI>().text = GameManager.Instance.taskTimes[index] == 0? "": GameManager.Instance.taskTimes[index].ToString("n2");
     }
 }
